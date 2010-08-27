@@ -169,3 +169,43 @@ describe "prevention of subtle and annoying bugs" do
     lambda { Color::RED.name << 'dish-Brown' }.should raise_error(TypeError, /can't modify frozen/)
   end
 end
+
+enum :Foo1 do
+  field :foo
+  field :bar, :default => 'my bar'
+  field :baz do |obj|
+    obj.__id__
+  end
+
+  Baz(
+    :foo => 'my foo'
+  )
+end
+
+enum :Foo2 do
+  field :foo
+  field :bar, :default => 'my bar'
+  field :baz do |obj|
+    obj.__id__
+  end
+
+
+  Baz(
+    :foo => 'my foo'
+  )
+
+  def init(opts = {})
+    super
+  end
+end
+
+describe "use field method to specify methods and defaults" do
+  it "should define a foo method" do
+    Foo1::Baz.foo.should eql "my foo"
+    Foo2::Baz.foo.should eql "my foo"
+    Foo1::Baz.bar.should eql "my bar"
+    Foo2::Baz.bar.should eql "my bar"
+    Foo1::Baz.baz.should eql Foo1::Baz.__id__
+    Foo2::Baz.baz.should eql Foo2::Baz.__id__
+  end
+end
