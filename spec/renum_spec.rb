@@ -230,3 +230,11 @@ describe "use field method to specify methods and defaults" do
     Foo2::Baz.baz.should == Foo2::Baz.__id__
   end
 end
+
+if defined?(::JSON)
+  describe "serialize and deserialize via JSON" do
+    it "should define methods with defaults for fields" do
+      JSON(JSON(Status::NOT_STARTED)).should == Status::NOT_STARTED
+    end
+  end
+end

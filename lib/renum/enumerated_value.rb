@@ -1,4 +1,8 @@
 require 'forwardable'
+begin
+  require 'json'
+rescue LoadError
+end
 
 module Renum
 
@@ -109,6 +113,14 @@ module Renum
           with_name(name)
         end
       end
+
+      if defined?(::JSON)
+        # Fetches the correct enum determined by the deserialized JSON
+        # document.
+        def json_create(data)
+          JSON.deep_const_get(data[JSON.create_id])[data['name']]
+        end
+      end
     end
 
     include Comparable
@@ -146,5 +158,15 @@ module Renum
       index <=> other.index
     end
 
+    if defined?(::JSON)
+      # Returns an enum (actually more a reference to an enum) serialized as a
+      # JSON document.
+      def to_json(*a)
+        {
+          JSON.create_id => self.class.name,
+          :name          => name,
+        }.to_json(*a)
+      end
+    end
   end
 end
