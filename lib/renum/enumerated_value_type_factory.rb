@@ -18,13 +18,16 @@ module Renum
         setup_for_definition_in_block(klass) if values == :defined_in_block
         klass.class_eval &block if block_given?
         if values == :defined_in_block
-          klass.block_defined_values.each do |value_name, init_args, instance_block|
-            value = klass.new(value_name)
-            klass.const_set(value_name, value)
-            value.instance_eval &instance_block if instance_block
-            value.init *init_args if value.respond_to? :init
+          begin
+            klass.block_defined_values.each do |value_name, init_args, instance_block|
+              value = klass.new(value_name)
+              klass.const_set(value_name, value)
+              value.instance_eval &instance_block if instance_block
+              value.init *init_args if value.respond_to? :init
+            end
+          ensure
+            teardown_from_definition_in_block(klass)
           end
-          teardown_from_definition_in_block(klass)
         else
           values.each do |name|
             klass.const_set(name, klass.new(name))

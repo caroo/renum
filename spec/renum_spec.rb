@@ -2,6 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 enum :Status, [ :NOT_STARTED, :IN_PROGRESS, :COMPLETE ]
 
+enum :Fuzzy, [ :FooBar, :BarFoo ]
+
 describe "basic enum" do
 
   it "creates a class for the value type" do
@@ -14,6 +16,12 @@ describe "basic enum" do
 
   it "exposes array of values" do
     Status.values.should == [Status::NOT_STARTED, Status::IN_PROGRESS, Status::COMPLETE]
+    Status.all.should == [Status::NOT_STARTED, Status::IN_PROGRESS, Status::COMPLETE]
+  end
+
+  it "groks first and last to retreive value" do
+    Status.first.should == Status::NOT_STARTED
+    Status.last.should == Status::COMPLETE
   end
 
   it "enumerates over values" do
@@ -34,6 +42,19 @@ describe "basic enum" do
     Status.with_name('IN_PROGRESS').should == Status::IN_PROGRESS
     Color.with_name('GREEN').should == Color::GREEN
     Color.with_name('IN_PROGRESS').should be_nil
+  end
+
+  it "provides fuzzy name lookup on values" do
+    Fuzzy[0].should == Fuzzy::FooBar
+    Fuzzy[1].should == Fuzzy::BarFoo
+    Fuzzy[:FooBar].should == Fuzzy::FooBar
+    Fuzzy[:BarFoo].should == Fuzzy::BarFoo
+    Fuzzy['FooBar'].should == Fuzzy::FooBar
+    Fuzzy['BarFoo'].should == Fuzzy::BarFoo
+    Fuzzy[:foo_bar].should == Fuzzy::FooBar
+    Fuzzy[:bar_foo].should == Fuzzy::BarFoo
+    Fuzzy['foo_bar'].should == Fuzzy::FooBar
+    Fuzzy['bar_foo'].should == Fuzzy::BarFoo
   end
 
   it "provides a reasonable to_s for values" do
@@ -200,12 +221,20 @@ enum :Foo2 do
 end
 
 describe "use field method to specify methods and defaults" do
-  it "should define a foo method" do
-    Foo1::Baz.foo.should eql "my foo"
-    Foo2::Baz.foo.should eql "my foo"
-    Foo1::Baz.bar.should eql "my bar"
-    Foo2::Baz.bar.should eql "my bar"
-    Foo1::Baz.baz.should eql Foo1::Baz.__id__
-    Foo2::Baz.baz.should eql Foo2::Baz.__id__
+  it "should define methods with defaults for fields" do
+    Foo1::Baz.foo.should == "my foo"
+    Foo2::Baz.foo.should == "my foo"
+    Foo1::Baz.bar.should == "my bar"
+    Foo2::Baz.bar.should == "my bar"
+    Foo1::Baz.baz.should == Foo1::Baz.__id__
+    Foo2::Baz.baz.should == Foo2::Baz.__id__
+  end
+end
+
+if defined?(::JSON)
+  describe "serialize and deserialize via JSON" do
+    it "should define methods with defaults for fields" do
+      JSON(JSON(Status::NOT_STARTED)).should == Status::NOT_STARTED
+    end
   end
 end
