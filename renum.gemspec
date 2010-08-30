@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{renum}
-  s.version = "1.3.1.1"
+  s.version = "1.3.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Hume"]
-  s.date = %q{2010-08-27}
+  s.date = %q{2010-08-30}
   s.description = %q{provides a readable but terse enum facility for Ruby}
   s.email = %q{duelin.markers@gmail.com}
   s.extra_rdoc_files = [
