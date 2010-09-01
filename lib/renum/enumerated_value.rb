@@ -15,7 +15,7 @@ module Renum
       include Enumerable
       extend Forwardable
 
-      def_delegators :values, :first, :last, :each, :[]
+      def_delegators :values, :first, :last, :each
 
       # Returns an array of values in the order they're declared.
       def values
@@ -103,8 +103,11 @@ module Renum
       # camelcase first, that is foo_bar will be converted into FooBar, before
       # with_name is called with this new value.
       def [](index)
-        if index.kind_of?(Integer)
+        case index
+        when Integer
           values[index]
+        when self
+          values[index.index]
         else
           name = index.to_s
           if name =~ /\A[a-z]/
@@ -127,7 +130,6 @@ module Renum
 
     # Name of this enumerated value as a string.
     attr_reader :name
-
 
     # Index of this enumerated value as an integer.
     attr_reader :index

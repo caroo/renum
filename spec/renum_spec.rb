@@ -61,6 +61,8 @@ describe "basic enum" do
     Fuzzy[:bar_foo].should == Fuzzy::BarFoo
     Fuzzy['foo_bar'].should == Fuzzy::FooBar
     Fuzzy['bar_foo'].should == Fuzzy::BarFoo
+    Fuzzy[Fuzzy::FooBar].should == Fuzzy::FooBar
+    Fuzzy[Fuzzy::BarFoo].should == Fuzzy::BarFoo
   end
 
   it "provides a reasonable to_s for values" do
