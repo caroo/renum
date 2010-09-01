@@ -125,8 +125,17 @@ module Renum
 
     include Comparable
 
-    attr_reader :name, :index
+    # Name of this enumerated value as a string.
+    attr_reader :name
 
+
+    # Index of this enumerated value as an integer.
+    attr_reader :index
+
+    alias_method :id, :index
+
+    # Creates an enumerated value named +name+ with a unique autoincrementing
+    # index number.
     def initialize name
       @name = name.to_s.freeze
       @index = self.class.values.size
