@@ -117,6 +117,11 @@ module Renum
         end
       end
 
+      # Returns the enum instance stored in the marshalled string +string+.
+      def _load(string)
+        with_name Marshal.load(string)
+      end
+
       if defined?(::JSON)
         # Fetches the correct enum determined by the deserialized JSON
         # document.
@@ -167,6 +172,11 @@ module Renum
     # Sorts enumerated values into the order in which they're declared.
     def <=> other
       index <=> other.index
+    end
+
+    # Returns a marshalled string for this enum instance.
+    def _dump(limit = -1)
+      Marshal.dump(name, limit)
     end
 
     if defined?(::JSON)

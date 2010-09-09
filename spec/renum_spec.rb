@@ -239,6 +239,12 @@ describe "use field method to specify methods and defaults" do
   end
 end
 
+describe "serialize and deserialize via Marshal" do
+  it "should define methods with defaults for fields" do
+    Marshal.load(Marshal.dump(Status::NOT_STARTED)).should == Status::NOT_STARTED
+  end
+end
+
 if defined?(::JSON)
   describe "serialize and deserialize via JSON" do
     it "should define methods with defaults for fields" do
