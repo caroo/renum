@@ -250,5 +250,23 @@ if defined?(::JSON)
     it "should define methods with defaults for fields" do
       JSON(JSON(Status::NOT_STARTED)).should == Status::NOT_STARTED
     end
+
+    it "should not serialize fields by default" do
+      foo1_json = JSON(Foo1::Baz)
+      foo1_hash = JSON.parse(foo1_json, :create_additions => false)
+      foo1_hash.keys.sort.should == %w[name json_class].sort
+    end
+
+    it "should serialize all fields if desired" do
+      foo1_json = Foo1::Baz.to_json(:fields => true)
+      foo1_hash = JSON.parse(foo1_json, :create_additions => false)
+      foo1_hash.keys.sort.should == %w[name json_class bar baz foo].sort
+    end
+
+    it "should serialize requested fields" do
+      foo1_json = Foo1::Baz.to_json(:fields => [ :bar, 'baz' ])
+      foo1_hash = JSON.parse(foo1_json, :create_additions => false)
+      foo1_hash.keys.sort.should == %w[name json_class bar baz].sort
+    end
   end
 end

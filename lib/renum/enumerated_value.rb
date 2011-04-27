@@ -180,13 +180,34 @@ module Renum
     end
 
     if defined?(::JSON)
+      # Set the given fields in the +obj+ hash
+      def set_fields(obj, fields)
+        fields.each do |f|
+          name = f.name
+          value = instance_variable_get("@#{name}")
+          value.nil? and next
+          obj[name] = value
+        end
+      end
+
       # Returns an enum (actually more a reference to an enum) serialized as a
       # JSON document.
-      def to_json(*a)
-        {
+      def to_json(opts = {}, *a)
+        obj = {
           JSON.create_id => self.class.name,
           :name          => name,
-        }.to_json(*a)
+        }
+        case fields_opt = opts[:fields]
+        when nil, false
+        when true
+          set_fields obj, self.class.fields
+        when Array
+          fields_opt = fields_opt.map(&:to_sym)
+          set_fields obj, self.class.fields.select { |field| fields_opt.include?(field.name) }
+        else
+          raise ArgumentError, "unexpected fields option #{fields_opt.inspect}"
+        end
+        obj.to_json(opts, *a)
       end
     end
   end
