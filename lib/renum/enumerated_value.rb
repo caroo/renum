@@ -6,7 +6,7 @@ end
 
 module Renum
 
-  # This is the superclass of all enumeration classes. 
+  # This is the superclass of all enumeration classes.
   # An enumeration class is Enumerable over its values and exposes them by numeric index via [].
   # Values are also comparable, sorting into the order in which they're declared.
   class EnumeratedValue
@@ -163,7 +163,7 @@ module Renum
     end
 
     # Returns the fully qualified name of the constant referring to this value.
-    # Don't override this if you're using Renum with the constantize_attribute 
+    # Don't override this if you're using Renum with the constantize_attribute
     # plugin, which relies on this behavior.
     def to_s
       "#{self.class}::#{name}"
@@ -192,7 +192,8 @@ module Renum
 
       # Returns an enum (actually more a reference to an enum) serialized as a
       # JSON document.
-      def to_json(opts = {}, *a)
+      def as_json(opts = {}, *a)
+        opts ||= {}
         obj = {
           JSON.create_id => self.class.name,
           :name          => name,
@@ -207,6 +208,12 @@ module Renum
         else
           raise ArgumentError, "unexpected fields option #{fields_opt.inspect}"
         end
+        obj.as_json(opts)
+      end
+
+      def to_json(opts, *a)
+        obj = as_json(opts)
+        opts.delete(:fields)
         obj.to_json(opts, *a)
       end
     end
