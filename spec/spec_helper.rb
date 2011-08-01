@@ -1,10 +1,4 @@
-begin
-  require 'spec'
-rescue LoadError
-  require 'rubygems'
-  gem 'rspec'
-  require 'spec'
-end
+require 'rspec'
 
 if ENV['USE_GEM']
   require 'rubygems'

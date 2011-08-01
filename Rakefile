@@ -1,7 +1,10 @@
 require 'rubygems'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
-Spec::Rake::SpecTask.new do |t|
+
+RSpec::Core::RakeTask.new do |t|
+  t.rspec_opts = ["-c", "-f progress", "-r ./spec/spec_helper.rb"]
+  t.pattern = 'spec/**/*_spec.rb'
 end
 
 task :default => :spec
@@ -13,8 +16,10 @@ begin
     s.summary = "provides a readable but terse enum facility for Ruby"
     s.email = "duelin.markers@gmail.com"
     s.homepage = "http://github.com/duelinmarkers/renum"
-    s.description = "provides a readable but terse enum facility for Ruby"
+    s.description = "This library provides a readable but terse enum facility for Ruby."
     s.authors = ["John Hume"]
+    s.add_development_dependency 'rspec', '~>2.6'
+    s.add_development_dependency 'jeweler', '~>1.6'
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

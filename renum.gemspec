@@ -10,7 +10,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Hume"]
   s.date = %q{2010-08-17}
-  s.description = %q{provides a readable but terse enum facility for Ruby}
+  s.description = %q{Terse enum facility for Ruby}
+  s.summary = %q{This library provides a readable but terse enum facility for Ruby.}
   s.email = %q{duelin.markers@gmail.com}
   s.extra_rdoc_files = [
     "README.textile"
@@ -30,11 +31,12 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{provides a readable but terse enum facility for Ruby}
   s.test_files = [
     "spec/renum_spec.rb",
      "spec/spec_helper.rb"
   ]
+  s.add_development_dependency 'rspec', '~>2.6'
+  s.add_development_dependency 'jeweler', '~>1.6'
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
